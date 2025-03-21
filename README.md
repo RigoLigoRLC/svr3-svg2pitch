@@ -29,9 +29,9 @@ options:
   --height HEIGHT, -h HEIGHT
                         Number of semitones tall (default: 12)
   -x X                  Starting X position, in quarter notes (default: 4)
-  -y Y                  Starting Y position, in MIDI note IDs (default: 12)
+  -y Y                  Starting Y position, in MIDI note IDs (default: 48)
   --precision PRECISION, -p PRECISION
-                        Polyline precision (higher values = more points)
+                        Polyline precision (LOWER values = more points)
   --force, -f           Overwrite output file if it exists
   --help                show this help message and exit
 ```

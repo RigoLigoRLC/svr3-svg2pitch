@@ -22,7 +22,7 @@ def main():
     parser.add_argument('--height', '-h', type=float, default=12.0, help='Number of semitones tall (default: 12)')
     parser.add_argument('-x', type=float, default=2.0, help='Starting X position, in quarter notes (default: 2)')
     parser.add_argument('-y', type=float, default=48.0, help='Starting Y position, in MIDI note IDs (default: 48)')
-    parser.add_argument('--precision', '-p', type=float, default=1.0, help='Polyline precision (higher values = more points)')
+    parser.add_argument('--precision', '-p', type=float, default=1.0, help='Polyline precision (LOWER values = more points)')
     parser.add_argument('--force', '-f', action='store_true', help='Overwrite output file if it exists')
     parser.add_argument('--help', action='help', default=argparse.SUPPRESS, help='show this help message and exit')
     args = parser.parse_args()
@@ -35,7 +35,13 @@ def main():
         print(f"Output file '{output_file}' already exists. Use -f to overwrite.")
         sys.exit(1)
 
+    print("Sampling SVG into polylines...")
     polylines: list[(float, float)] = get_normalized_polylines(input_file, args.precision)
+
+    # Scale up/down the tiny wiggle if width is not default value
+    if args.width != 4.0:
+        global TINY_WIGGLE
+        TINY_WIGGLE /= (args.width / 4.0)
 
     # Helper to convert normalized coordinates to SVP coordinates
     def convert_coords(point):
@@ -140,6 +146,7 @@ def main():
     # Write the SVP file
     pitch_id = 1000
 
+    print("Begin processing SVG to SVP...")
     with open(output_file, 'w') as f:
         notegroup_uuid = str(uuid.uuid4())
         f.write(file_seg_before_uuid)
